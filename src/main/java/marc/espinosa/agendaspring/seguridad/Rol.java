@@ -2,7 +2,8 @@ package marc.espinosa.agendaspring.seguridad;
 
 public enum Rol {
     ADMIN("ADMIN"),
-    USER("USER");
+    USER("USER"),
+    VIEWER("VIEWER");
 
     private final String rol;
 

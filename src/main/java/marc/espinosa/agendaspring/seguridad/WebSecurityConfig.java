@@ -22,12 +22,22 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(HttpMethod.POST, Constants.LOGIN_URL)
-                        .permitAll()
+                        //Login
+                        .requestMatchers(HttpMethod.POST, Constants.LOGIN_URL).permitAll()
+                        // Get
+                        .requestMatchers(HttpMethod.GET, "/contactos", "/contactos/**")
+                        .authenticated()
+                        //Post
+                        .requestMatchers(HttpMethod.POST, "/contactos", "/contactos/**")
+                        .hasAnyAuthority("ROLE_" + Rol.ADMIN, "ROLE_" + Rol.USER)
+                        //Put
+                        .requestMatchers(HttpMethod.PUT, "/contactos/**")
+                        .hasAnyAuthority("ROLE_" + Rol.ADMIN, "ROLE_" + Rol.USER)
+                        //Delete
                         .requestMatchers(HttpMethod.DELETE, "/contactos/**")
                         .hasAuthority("ROLE_" + Rol.ADMIN)
-                        .anyRequest()
-                        .authenticated()
+                        //Cualquier otra peticion autenticacion
+                        .anyRequest().authenticated()
                 )
                 .addFilterAfter(jwtAuthoritationFilter,  UsernamePasswordAuthenticationFilter.class);
         return http.build();
